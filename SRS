@@ -1,0 +1,369 @@
+Software Requirements Specification (SRS)
+For
+Art Therapy for ASD (Autism Spectrum Disorders) :
+
+Release 1.0
+Name of the Project : OtizArt
+
+
+Prepared by :
+
+Öner Nemutlu
+Doruk Bulut
+Nebi Osman Ünal
+Kuzeyhan Savaş
+
+
+Oct. 22, 2018
+Table of Contents
+
+1.	Introduction	3
+1.1.	Purpose	3
+1.2.	Scope	3
+1.3.	Definition,  Acronyms and Abbreviations	3
+1.4.	References	4
+1.5.	Overview	4
+2.	Overall Description of the Project	4
+2.1.	Product Perspective	4
+2.2.	Product Functions	5
+2.3.	User Characteristics	6
+2.4.	Constraints	6
+2.5.	Assumptions and Dependencies	7
+3.	Specific Requirements	7
+3.1 External Specific Requirements	7
+3.1.1 User Interfaces	7
+3.1.2 Hardware Interfaces	7
+3.1.3 Software Interfaces	8
+3.1.4 Communication Interface	8
+3.2. Functional Requirements	8
+3.2.1 User Registration	9
+3.2.2 Order	9
+3.2.3 Items	9
+3.2.4 Activity	10
+3.2.5 Donate	10
+3.2.6 Update	10
+3.2.7 Create	10
+3.2.8 Delete	11
+3.2.9 View	11
+3.2.10 Approvement	11
+3.3 Non-Functional Requirements	12
+3.3.1 Performance Requirements	12
+3.3.2 Security Requirements	12
+3.3.3 Availability	12
+3.3.4 Usability	13
+3.3.5 Database Requirements	13
+4. Appendixes	13
+4.1 Appendix 1 Interview with Nilüfer Ertem :	14
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1.	Introduction
+
+1.1.	Purpose
+
+The purpose of this SRS (Software Requirements Specification) is to display both functional and non – functional concerns to the readers. This document explains the scope of the system and along with some diagrams clarify the questions; how the system is to be designed, what are the features of the system, and how the system will react in a certain scenario.
+This document is prepared in the results of an interview done with Dr. Bilge Say, the script can be found in Appedix part, to be examined by “Atılım University Senior Project Examination Panel” also will be used for design, implementation, and testing phases by project development team.
+
+1.2.	Scope
+
+The developed system "OtizArt" is designed to help the families of children with Autism Spectrum Disorder financially.
+The aim of this project is to provide financial benefit or support special education by selling the art products which made by registered foundations or children with ASD.
+
+1.3.	Definition,  Acronyms and Abbreviations
+
+Term
+	Definition
+SRS	Software Requirements Specification
+
+DataBase	A Structered Set of Data Held in a Computer System
+
+Web Page Development	Developing a Website For the Internet
+
+ERD	Entity Relationship Diagram
+
+Use Case
+	Casual Scenario for All Users
+ASD	Autism Spektrum Disorders
+
+
+1.4.	References
+
+•	IEEE Std 830-1998. Software Requirements Specification
+•	Process Impact Internet Application User Interface Standard, Version 2.0
+
+1.5.	Overview
+
+The content of this SRS document contains all the requirements and description of the ‘OtizArt’ project in briefly.
+Section 2 explains the the project especially for user with several topics.These topics are Product perspective,Product fucntions,User characteristics,Constraint and Assumptions&Dependencies.In Product perspective part there is a Use Case Diagram for intelligibility.
+Section 3 is for ‘Specific Requirements’.This part gives  more details in technically with using ER diagram.The topics under this heading are External interface requirements,Functional requirements and Non-Functional requirements.It is intelligible for developers and experts.
+Section 4  ‘Appendixes’ part contains some interview.
+2.	Overall Description of the Project
+
+2.1.	Product Perspective
+
+The main goal of OtizArt is supporting the families who have child or children with autism spectrum disorders and foundations that have stundents with autism spectrum disorders.OtizArt runs on web.The art products which made by children can sell on that website.Also there is a donation option for people and finally there is an activity calendar.Use case diagram in Figure 1 explains the mechanism from user perspective.
+ 
+Figure 1 : Use Case Diagram
+
+
+
+2.2.	Product Functions 
+
+A.	Sales of Art Products
+B.	Creation of Activity Calendar
+C.	Provide of Donation Options
+D.	Auctions between Foundations
+E.	Connection Between Children and Foundations
+
+
+
+2.3.	User Characteristics
+
+Admin: Admin type user’s main task is to control the system. Admin has the authority to approve the registration for new registry. Thus, bringing a restriction to security during registration.The confirmation of uploaded photos are controlled by Admin. Admin can Access the database.Admin has authorizations such as insert, update, remove on database.Activity calendar is controlled by admin.
+Private User: Private user is for the family who has child or children with authism. The reason of this, only the family can upload the Picture of the product.Private users’ can see the activity calendar. Therefore we need that type of user. Private users’ information ought to be kept for reliability.
+Standart User: Standart users dont have any authority. It is just for visitor. Standart user can buy a product for supporting the family also standart users can be benefactor.The standar user can see the activity calendar.
+Foundation : That type of user also can be a benefactor.Only the foundations can get that type of user.The foundations can sell their art products to provide income.This type of user has an authority to organize activity on activity calendar.These are basically what the foundation user can do.
+
+
+
+2.4.	Constraints
+
+A.	The system’s design , code and maintenance documentation shall conform to the Process Impact Intranet Development Standard, version 1.3 [2].
+B.	The system shall use the current corporate standard Oracle Databae Engine and MySQL Database Engine.
+C.	The system has formed platfrom in mysql database supported by PhpMyAdmin.
+D.	All HTML, PHP, JavaScripts and CSS codes shall conform to the HTML 4.0 standard.
+
+2.5.	Assumptions and Dependencies
+
+A.	The website should always serve. Operation of the website depends on the server and
+B.	hosting. 
+C.	Being a private user and upload photos containing art product depends on admin approval.
+D.	Another assumption is, website must be mobile friendly.So that means the web page has to be smooth when you want to use mobile platform instead of desktop platform.The layout of the page and the buttons should not be distorded.
+
+3.	Specific Requirements
+
+3.1 External Specific Requirements
+		
+3.1.1 User Interfaces
+
+1. The OtizArt web page display’s should conform to Process Impact Internet Application User Interface Standard, Version 2.0(referans).
+2. The system should provide a help link from any HTML page displayed to explain how to use this page.
+3. The Web pages should permit complete navigation and item or activity selection using the keyboard alone, in addition to using mouse and keyboard combinations.
+4. The system should direct the corresponding admin approval to check the various documents if the system wants to register an official foundation.
+	           
+3.1.2 Hardware Interfaces
+
+	Hardware interfaces are not defined.
+	         
+
+
+ 		3.1.3 Software Interfaces
+
+1. OtizArt System should send the orders from the program interface to the item system. 
+	2. System should check with the admin approval if the product is suitable for sale.
+3. The system should update the status of a sold product and should changes the stock information.
+4. The system should decide the standard user's request to be private users with admin approval.
+5. The OtizArt system should communicate with payment system through a programmatic interface.
+		3.1.4 Communication Interface
+
+	1. The OtizArt System should answer users’ requests. 
+2. The OtizArt system shall send an e-mail message to the Admin to confirm acceptance of product, membership and delivery products.
+3. The OtizArt system shall send an e-mail message to the Admin to report any problems with the product order or delivery after the order is accepted.
+
+
+
+
+
+
+
+
+
+
+
+
+
+3.2. Functional Requirements 
+
+3.2.1 User Registration
+
+FR1: The system must allow users can sign in.
+FR2: The system must allow users can log in.
+FR3: The system must allow users can log out.
+FR4: The system must allow to send standard users' request to be private user to admin approval.
+FR5: The system must allow foundations can sign in.
+FR6: The system must allow foundations can log in.
+FR7: The system must allow foundations can log out.
+FR8: The system must allow to send foundations’ request to be foundation account to admin approval.
+
+3.2.2 Order
+
+FR1: The system must allow the user to register for order.
+FR2: The system must allow the user to view detail description of item.
+FR3: The system must notify the user for available items.
+FR4: The system must allow the user to buy item.
+FR5: The system should allow the user to cancel order.
+FR6: The system must show all orders to admin.
+FR7: The system should ensure that users are canceling the wrong orders.
+FR8: The system must show user to show information about their orders.
+FR9: The system should allow to buy items only foundation accounts and standard users.
+
+
+3.2.3 Items
+
+FR1: The system must record information about every item.
+FR2: The system can allow to upload image of item.
+FR3: The system should queue items by upload time.
+
+3.2.4 Activity
+
+FR1: The system can accept multiple activities on same day.
+FR2: The system must schedule the all activities day by day.
+
+3.2.5 Donate
+
+FR1: The system must allow to donate only standard and private users.
+
+3.2.6 Update
+
+FR1: The system should allow standard and private users to update their information.
+FR2: The system must update items availability for order.
+FR3: The system must allow to update product only private user and admin.
+FR4: The system must only allow admin to update user types.
+FR5: The system must only allows admin and foundations to update activities.
+FR6: The system must allow to foundations and admin to update foundation informations.
+
+
+
+
+
+3.2.7 Create
+
+FR1: The system must allow to create items only for private users.
+FR2: The system must allow to create activities only for foundations.
+FR3: The system must send create request to admin.
+FR4: The system must allow to create donation packet only for admin.
+FR5: The system must allow to create auction only for foundation account.
+
+3.2.8 Delete
+
+FR1: The system must allow to delete user only for admin.
+FR2: The system must allow to delete product only for private user, foundation and admin.
+FR3: The system must allow to delete activity only for foundation and admin.
+3.2.9 View
+
+FR1: The system should view navigation bar.
+FR2: The system must view to available products.
+FR3: The system must view all information about users only for admin.
+FR4: The system must view activity time.
+FR5: The system must view order informations.
+
+
+
+
+
+
+
+
+3.2.10 Approvement
+
+FR1: The system must send standard users’ private user type request to admin(if proper).
+FR2: The system must send new products to admin approval.
+FR3: The system must send product updates to admin approval.
+FR4: The system must allow approvement function only for admin.
+
+3.3 Non-Functional Requirements
+
+3.3.1 Performance Requirements
+
+NFR1: The system should support 1000 users during the peak usage all time.
+NFR2: The system must generate HTML pages no more than 10 seconds.
+NFR3: The system must response to queries no longer than 6 seconds.
+NFR4: The system should display confirmation messages to users for 3 seconds after user submit information.
+
+3.3.2 Security Requirements
+
+NFR1: The system provides username and password to prevent the system from unauthorized access.
+NFR2: The system must do all network transactions that involve financial information or personally identifiable information shall be encrypted.
+NFR3: The system to allow user should be required to log in to the OtizArt System for all operation except viewing products.
+
+
+
+
+
+3.3.3 Availability
+
+NFR1: The system should always be available for access at 24 hours, 7 days a week. Also in the occurrence of any major system malfunctioning, the system should be available in 1 to 2 working days, so that business process is not severely affected.
+
+3.3.4 Usability
+
+NFR1: The system provides a help and support menu in interfaces for the user to interact with the system.
+NFR2: The user can use the system by reading help and support.
+
+		3.3.5 Database Requirements
+
+The Entity Relationship Diagram of the OtizArt System can be seen as in the figure.
+
+ 
+Figure 2 : ER Diagram
+
+
+4. Appendixes
+
+4.1 Appendix 1 Interview with Nilüfer Ertem :
+
+Q1 :  What is autism spectrum disorders ?
+Answer : Autism spectrum disorder is a complex neuro-developmental disorder that emerges from birth or early years of life. Autism is thought to be caused by some nervous system problems that affect the structure or functioning of the brain. The term autism has been used from time to time because of its ease of use for autism spectrum disorder. 
+Q2 : What is the cause of autism spectrum disorder ?
+Answer : Today, it is not known what causes the autism spectrum disorder, but there is evidence that it is genetically based. However, it is not yet known which genes or genes are responsible. There are opinions that environmental factors can also lead to autism. Numerous researches have been carried out on the effects of both genetic basis and environmental factors. Autism has nothing to do with child-rearing or family economic conditions; Therefore, autism spectrum disorder is found in all kinds of society, in different geographies, race and family.
+Q3 : How can art therapy be applied to children with autism spectrum disorders ?
+Answer : Children with this type of disorder can take art theraphy classes to express themselves better and easier. Moreover, these children are highly capable of painting.
+
+4.2 Appendix 2 Interview with Ufuk Timuçin, Coordinator of İlgi Autism Foundation :
+
+Q1 : How and by whom is autism diagnosed ?
+Answer : Persons who can make a diagnosis are only specialists. The external appearance of children with autism is not different from other children; however, their behavior is different. The diagnosis is made by the experts by observing the child, conducting development tests and asking parents about the child's development. Diagnosis of autism can be made at the age of 12 months. Early diagnosis is important for the start of education.
+The experts who can diagnose autism in our country are child mental health specialists and child neurologists.
+1.	Child Psychologist
+2.	Child Neurologist
+
+
+
+Q2 : Are there any system requirements that you can recommend to us?
+Answer : You can make some changes to the auction system. You can modify trainer type user. 
+By creating corporate membership to the foundations, it can be provided that they organize and manage their own sales and activities in the OtizArt system.
+
+
+
+
+
+
+
+
+
+
+
+	 
+	
+	
+
+
+
+
