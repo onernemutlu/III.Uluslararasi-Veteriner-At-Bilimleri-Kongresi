@@ -1,0 +1,197 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\Products;
+use DB;
+use Illuminate\Database\Eloquent\Model;
+use App\User;
+
+class ProductsController extends Controller
+{
+     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $products = Products::where('confirmed' , TRUE)->where('sold' , FALSE)->orderBy('created_at', 'desc')->paginate(10);
+        
+       
+        return view('products.index')->with('products', $products);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('products.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request, [ 
+            'title' => 'required',
+            'body' => 'required',
+            
+            'cover_image' => 'image|nullable|max:1999'
+        ]);
+
+
+        //Handle File Upload
+            if($request->hasFile('cover_image')) {
+                //Get filename with the extension
+                $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+                //Get Just File Name
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                //Get Just ext
+                $extension = $request->file('cover_image')->getClientOriginalExtension();
+                //File Name to Store
+                $fileNameToStore= $filename.'_'.time().'.'.$extension;
+                //Upload Image
+                $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+           } else {
+                $fileNameToStore = 'noimage.jpg';
+
+            }
+
+
+
+        //CREATE Product
+        $products = new Products;
+        $products->title = $request->input('title');
+        $products->body = $request->input('body');
+        $products->user_id = auth()->user()->id;
+        $products->cover_image = $fileNameToStore;
+        $products->save();
+
+        return redirect('/products')->with('success', 'Ürün Eklendi Admin Onayından Sonra Yayınlanacaktır');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $products = Products::find($id);
+        return view('products.show')->with('products', $products);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $products = Products::find($id);
+        // Check for correct user
+        if(auth()->user()->id !==$products->user_id) {
+            return redirect('/products')->with('error', 'Bu Sayfaya Giriş Yetkiniz Yok');
+
+        }
+
+        return view('products.edit')->with('products', $products);
+        
+    }
+    
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, [ 
+            'title' => 'required',
+            'body' => 'required',
+            'cover_image' => 'image|nullable|max:1999'
+        ]);
+
+
+        //Handle File Upload
+            if($request->hasFile('cover_image')) {
+                //Get filename with the extension
+                $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+                //Get Just File Name
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                //Get Just ext
+                $extension = $request->file('cover_image')->getClientOriginalExtension();
+                //File Name to Store
+                $fileNameToStore= $filename.'_'.time().'.'.$extension;
+                //Upload Image
+                $path = $request->file('cover_image')->storeAs('/storage/cover_images/', $fileNameToStore);
+           } else {
+                $fileNameToStore = 'noimage.jpg';
+
+            }
+
+
+
+        //CREATE POST
+        $products = Products::find($id);
+        $products->title = $request->input('title');
+        $products->body = $request->input('body');
+        $products->user_id = auth()->id();
+        $products->cover_image = $fileNameToStore;
+        $products->save();
+
+        return redirect('/products')->with('success', 'Ürün Güncellendi');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $products = Products::find($id);
+        // Check for correct user
+        if(!auth()->user()->hasRole("admin") && auth()->user()->id !==$products->user_id) {
+            return redirect('/products')->with('error', 'Bu Sayfaya Giriş Yetkiniz Yok');
+
+        }
+        
+        if($products->cover_image != 'noimage.jpg') {
+                // Delete Image
+               Storage::delete('/storage/cover_images/'.$products->cover_image);
+        }
+
+        $products->delete();
+        return redirect('/products')->with('success', 'Ürün Kaldırıldı');
+
+        
+    }
+     
+}
