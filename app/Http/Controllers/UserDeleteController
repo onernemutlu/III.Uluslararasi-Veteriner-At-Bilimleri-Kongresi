@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\User;
+
+
+class UserDeleteController extends Controller
+{
+    public function destroy(Request $request)
+    {
+        $user = User::find($request->input('id'));
+        $user->delete();
+        return redirect('/dashboard')->with('success', 'Hesap Silindi');
+    }
+}
