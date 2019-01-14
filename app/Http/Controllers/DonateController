@@ -1,0 +1,113 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\DonationEvent;
+use App\Donation;
+use App\User;
+
+class DonateController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $donations = Donation::where('donor' , auth()->user()->id)->get();
+        return view('donate.index')->with('donations' , $donations);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Request $request)
+    {
+        $eventId = $request->query('eventId');
+        return view('donate.create')->with('eventId' , $eventId);
+        
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request, [ 
+            'price' => 'required'
+        ]);
+
+        $eventId = $request->input('eventId');
+
+        $donation = new Donation;
+
+        $donation->donor = auth()->user()->id;
+        $donation->amount = $request->input('price');
+        $donation->event = $eventId;
+
+        $donation->save();
+
+        $event = DonationEvent::find($eventId);
+
+        $event->currentMoney = $event->currentMoney + $donation->amount;
+
+        if($event->currentMoney > $event->targetMoney)
+            $event->completed = TRUE;
+
+        $event->save();
+
+        return redirect('donate');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+}
