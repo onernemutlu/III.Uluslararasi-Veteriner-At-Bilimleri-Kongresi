@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\User;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+
+
+
+class PrivateUserUpdateController extends Controller
+{
+    public function index()
+    {
+        return view('private.edit');
+    }
+
+    public function edit(Request $request)
+    {
+        $request->validate
+        ([
+            'name' => 'required',
+            'password' => 'required'
+        ]);
+
+        //Retrieve user from the database
+        $id = $request->input('id');
+        $user = User::find($id);
+
+        //Update it
+        $user->name = $request->input('name');
+        $user->password = Hash::make($request->input('password'));
+        $user->confirmed = FALSE;
+        $user->save();
+        Auth::login($user);
+
+        return redirect('/');
+   }
+}
