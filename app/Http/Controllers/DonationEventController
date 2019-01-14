@@ -1,0 +1,136 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\DonationEvent;
+
+class DonationEventController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        $events = DonationEvent::all();
+        return view('donationEvent.index')->with('events' , $events);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('donationEvent.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request, [ 
+            'title' => 'required',
+            'description' => 'required',
+            'start' => 'required',
+            'end' => "required" ,
+            'cover_image' => 'image|nullable|max:1999'
+        ]);
+
+        //Handle File Upload
+        if($request->hasFile('cover_image')) {
+            //Get filename with the extension
+            $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+            //Get Just File Name
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            //Get Just ext
+            $extension = $request->file('cover_image')->getClientOriginalExtension();
+            //File Name to Store
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            //Upload Image
+            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+        } else {
+            $fileNameToStore = 'noimage.jpg';
+
+        }
+
+        //CREATE POST
+        $donationEvent = new DonationEvent;
+        $donationEvent->createdBy = auth()->user()->id;
+        $donationEvent->title = $request->input('title');
+        $donationEvent->description = $request->input('description');
+        $donationEvent->start = $request->input('start');
+        $donationEvent->end = $request->input('end');
+        $donationEvent->cover_image = $fileNameToStore;
+        $donationEvent->targetMoney = $request->input('targetMoney');
+        $donationEvent->currentMoney = 0;
+        $donationEvent->save();
+
+        return redirect('/donationEvent')->with('success', 'Etkinlik Oluşturuldu. Admin Onayından Sonra Yayınlanacaktır.');    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $event = DonationEvent::find($id);
+        return view('donationEvent.show')->with('event' , $event);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $donationEvent = donationEvent::find($id);
+        // Check for correct user
+        if(auth()->user()->id !== $donationEvent->createdBy) {
+            return redirect('/donationEvent')->with('error', 'Bu Sayfaya Giriş Yetkiniz Yok');
+
+        }
+        
+        if($donationEvent->cover_image != 'noimage.jpg') {
+                // Delete Image
+               Storage::delete('/storage/cover_images/'.$donationEvent->cover_image);
+        }
+
+        $donationEvent->delete();
+        return redirect('/donationEvent')->with('success', 'Paket Kaldırıldı');
+    }
+}
