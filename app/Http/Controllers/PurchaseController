@@ -1,0 +1,55 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use App\User; 
+use App\Products;
+use DB;
+
+
+class PurchaseController extends Controller
+{
+     /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        
+        $user_id = auth()->user()->id;
+        $products = Products::where('buyer' , $user_id)->get();
+        return view('purchase')->with('products', $products);
+    }
+    
+    public function destroy(Request $request)
+    {
+        $product = Products::find($request->input('id'));
+        // Check for correct user
+        if(auth()->user()->id !==$product->user_id) {
+            return redirect('/')->with('error', 'Bu Sayfaya Giriş Yetkiniz Yok');
+        }
+        
+        if($product->cover_image != 'noimage.jpg') {
+                // Delete Image
+                Storage::delete('public/cover_images/'.$products->cover_image);
+        }
+
+        $product->buyer = NULL;
+        $product->save();
+
+        return redirect('/')->with('success', 'Kaldırıldı'); 
+    }
+}
