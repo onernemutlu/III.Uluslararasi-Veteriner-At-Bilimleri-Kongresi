@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Post;
-use DB;
+use DB; 
 
 class PostsController extends Controller
 {
@@ -24,11 +24,12 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //$posts = Post::orderBy('title','asc')->take(1)->get();
         //$posts = Post::orderBy('title','asc')->get();
-        $posts = Post::orderBy('created_at','asc')->paginate(5);
+        $city = $request->query('city');
+        $posts = Post::where('confirmed' , TRUE)->where('city' , 'LIKE', '%'.$city.'%')->orderBy('created_at', 'desc')->paginate(5);
         return view('posts.index')->with('posts',$posts);
     }
 
@@ -53,6 +54,7 @@ class PostsController extends Controller
         $this->validate($request, [ 
             'title' => 'required',
             'body' => 'required',
+            'city' => 'required',
             'cover_image' => 'image|nullable|max:1999'
         ]);
 
@@ -80,11 +82,12 @@ class PostsController extends Controller
         $post = new Post;
         $post->title = $request->input('title');
         $post->body = $request->input('body');
+        $post->city = $request->input('city');
         $post->user_id = auth()->id();
         $post->cover_image = $fileNameToStore;
         $post->save();
 
-        return redirect('/posts')->with('success', 'Etkinlik Oluşturuldu');
+        return redirect('/posts')->with('success', 'Etkinlik Oluşturuldu. Admin Onayından Sonra Yayınlanacaktır.');
     }
 
     /**
@@ -131,7 +134,8 @@ class PostsController extends Controller
     {
         $this->validate($request, [ 
             'title' => 'required',
-            'body' => 'required'
+            'body' => 'required',
+            'city' => 'required',
         ]);
 
         //Handle File Upload
@@ -145,7 +149,7 @@ class PostsController extends Controller
             //File Name to Store
             $fileNameToStore= $filename.'_'.time().'.'.$extension;
             //Upload Image
-            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+            $path = $request->file('cover_image')->storeAs('storage/cover_images', $fileNameToStore);
         } 
 
 
@@ -153,6 +157,7 @@ class PostsController extends Controller
         $post = Post::find($id);
         $post->title = $request->input('title');
         $post->body = $request->input('body');
+        $post->city = $request->input('city');
         $post->user_id = auth()->id();
         if($request->hasFile('cover_image')) {
 
